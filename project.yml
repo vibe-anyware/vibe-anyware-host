@@ -1,0 +1,45 @@
+name: VibeAnyware
+options:
+  bundleIdPrefix: app.vibeanyware
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+    GCC_TREAT_WARNINGS_AS_ERRORS: NO
+targets:
+  VibeAnyware:
+    type: tool
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - Sources/Shared
+      - Sources/MacHost
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.vibeanyware.host
+  VibeAnywareTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - Sources/Shared
+      - Sources/MacHost/HostRuntimeStatus.swift
+      - Sources/MacHost/MacInputController.swift
+      - Tests/VibeAnywareTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: app.vibeanyware.host.tests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  VibeAnyware:
+    build:
+      targets:
+        VibeAnyware: all
+        VibeAnywareTests: [test]
+    test:
+      targets:
+        - VibeAnywareTests
+    run:
+      config: Debug

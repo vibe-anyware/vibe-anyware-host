@@ -1,0 +1,64 @@
+Vibe Anyware Source-Available License
+Version 1.0
+
+Copyright (c) 2026 Shenzhen Infinite State Technology Co., Ltd.
+All rights reserved.
+
+This software (the "Software") is the companion Mac host for the Vibe Anyware
+application (the "App"). The source code is made available for transparency and
+so that end users can build and run their own copy. It is NOT open-source
+software, and it is NOT free for any use. Your rights are limited to those
+expressly granted below.
+
+1. LIMITED LICENSE GRANT
+   Subject to your continuous compliance with this License, Shenzhen Infinite
+   State Technology Co., Ltd. ("Licensor") grants you a personal, non-exclusive,
+   non-transferable, non-sublicensable, revocable license to:
+   (a) view and study the source code of the Software;
+   (b) compile the Software from source; and
+   (c) install and run the compiled Software on Mac computers that you own or
+       personally control,
+   in each case SOLELY for the purpose of using the Software as a companion
+   client to the official Vibe Anyware App, and SOLELY for your own personal,
+   non-commercial use.
+
+2. RESTRICTIONS
+   You may NOT, in whole or in part, directly or indirectly:
+   (a) redistribute, publish, sublicense, sell, rent, lease, or otherwise
+       transfer the Software or its source code to any third party;
+   (b) host, operate, or offer the Software (or any service derived from it) to
+       third parties, including as a managed, hosted, or commercial service;
+   (c) use the Software or any portion of its source code in, or to build, any
+       other software, product, or service, including any product or service
+       that competes with the App or with Licensor;
+   (d) create, distribute, or make available any modified version, derivative
+       work, fork, or adaptation of the Software;
+   (e) use the Software for any commercial purpose; or
+   (f) remove, alter, or obscure any copyright, trademark, or other proprietary
+       notices.
+
+3. RESERVATION OF RIGHTS
+   All rights not expressly granted in Section 1 are reserved by Licensor. No
+   rights are granted by implication, estoppel, or otherwise. "Vibe Anyware" and
+   related names, logos, and marks are trademarks of Licensor and are not
+   licensed to you.
+
+4. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT.
+
+5. LIMITATION OF LIABILITY
+   IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM,
+   OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   SOFTWARE.
+
+6. TERMINATION
+   This License terminates automatically and immediately if you breach any of its
+   terms. Upon termination you must stop using and destroy all copies of the
+   Software. Licensor may also revoke this License at any time.
+
+For any use beyond the limited license above — including commercial use,
+redistribution, or integration into another product — you must obtain a separate
+written license from Licensor. Contact: support@infist.cn
