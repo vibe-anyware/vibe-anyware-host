@@ -30,6 +30,12 @@ No account is required for LAN use.
 
 ## Install
 
+**Easiest — with Claude Code:** copy the `Skill/install-vibe-anyware-host` folder into
+your `~/.claude/skills/` and tell Claude Code "install the Vibe Anyware Mac host". It
+checks prerequisites, clones, builds, installs, and walks you through pairing.
+
+**Manual:**
+
 ```bash
 git clone https://github.com/vibe-anyware/vibe-anyware-host.git
 cd vibe-anyware-host
