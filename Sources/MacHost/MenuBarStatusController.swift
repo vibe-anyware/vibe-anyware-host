@@ -2,7 +2,7 @@ import AppKit
 import Foundation
 
 @MainActor
-final class MenuBarStatusController: NSObject {
+final class MenuBarStatusController: NSObject, NSMenuDelegate {
     private let statusStore: HostStatusStore
     private let syntheticCursor: SyntheticCursorController
     private let statusItem: NSStatusItem
@@ -10,6 +10,16 @@ final class MenuBarStatusController: NSObject {
     private lazy var setupWindowController = MacHostSetupWindowController(statusStore: statusStore)
     private var observerID: UUID?
     private var latestSnapshot = HostRuntimeSnapshot()
+    /// A single, persistent menu whose items are rebuilt lazily via
+    /// `menuNeedsUpdate(_:)`. Rebuilding and reassigning `statusItem.menu` on
+    /// every command frame (mouse moves arrive at 60–120 Hz) made AppKit accrue
+    /// KVO dependency objects that were never released — a multi-GB leak over a
+    /// few days. The menu content only matters when the user actually opens it.
+    private let menu = NSMenu()
+    /// Last active-client count reflected on the status button. The button is
+    /// only touched when this changes, so per-frame command traffic doesn't
+    /// churn AppKit at all.
+    private var lastActiveCount = -1
 
     init(statusStore: HostStatusStore, syntheticCursor: SyntheticCursorController) {
         self.statusStore = statusStore
@@ -22,6 +32,9 @@ final class MenuBarStatusController: NSObject {
         statusItem.button?.imagePosition = .imageLeading
         statusItem.button?.title = ""
         statusItem.button?.toolTip = "VibeAnyware"
+        // Assign the menu exactly once; its items are (re)built on demand.
+        menu.delegate = self
+        statusItem.menu = menu
         observerID = statusStore.observe { [weak self] snapshot in
             DispatchQueue.main.async {
                 self?.render(snapshot)
@@ -38,15 +51,23 @@ final class MenuBarStatusController: NSObject {
     private func render(_ snapshot: HostRuntimeSnapshot) {
         latestSnapshot = snapshot
         let activeCount = snapshot.activeClientCount
+        // Only touch the status button when the visible count actually changes.
+        guard activeCount != lastActiveCount else { return }
+        lastActiveCount = activeCount
         statusItem.button?.image = statusIcon
         statusItem.button?.imagePosition = activeCount > 0 ? .imageLeft : .imageOnly
         statusItem.button?.title = activeCount > 0 ? "\(activeCount)" : ""
         statusItem.button?.contentTintColor = nil
-        statusItem.menu = buildMenu(snapshot)
     }
 
-    private func buildMenu(_ snapshot: HostRuntimeSnapshot) -> NSMenu {
-        let menu = NSMenu()
+    /// NSMenuDelegate: rebuild the menu items just before it's shown, from the
+    /// most recent snapshot. This is the only place the menu is populated.
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        populateMenu(menu, snapshot: latestSnapshot)
+    }
+
+    private func populateMenu(_ menu: NSMenu, snapshot: HostRuntimeSnapshot) {
+        menu.removeAllItems()
         menu.addItem(header("VibeAnyware"))
         menu.addItem(actionItem("Open Setup Guide...", #selector(showSetupGuide)))
         menu.addItem(actionItem("Open Accessibility Settings", #selector(openAccessibilitySettings)))
@@ -69,7 +90,6 @@ final class MenuBarStatusController: NSObject {
         let quitItem = NSMenuItem(title: "Quit VibeAnyware", action: #selector(quit), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
-        return menu
     }
 
     private func lanStatus(_ snapshot: HostRuntimeSnapshot) -> String {
@@ -144,7 +164,8 @@ final class MenuBarStatusController: NSObject {
 
     @objc private func toggleSyntheticCursor() {
         syntheticCursor.setEnabled(!syntheticCursor.isEnabled)
-        render(latestSnapshot)
+        // The menu rebuilds its checkmark from `syntheticCursor.isEnabled` the
+        // next time it opens (via menuNeedsUpdate), so nothing to refresh here.
     }
 
     @objc private func openAccessibilitySettings() {
