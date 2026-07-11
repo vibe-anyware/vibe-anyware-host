@@ -236,6 +236,26 @@ public enum RelayRole: String, Sendable {
 }
 
 public enum RelayEndpoint {
+    /// The HTTPS endpoint a desktop host calls to renew its relay access token.
+    /// Relay access tokens expire after a week and only the iOS app can mint new
+    /// ones, so the host renews its own by proving it holds the account's
+    /// command key.
+    public static func desktopRefreshURL(endpoint: String) throws -> URL {
+        let normalizedEndpoint = try normalizedEndpoint(endpoint)
+        guard var components = URLComponents(string: normalizedEndpoint) else {
+            throw RemoteControlError.invalidRelayEndpoint
+        }
+
+        components.scheme = components.scheme?.lowercased() == "ws" ? "http" : "https"
+        components.path = "/v1/remote-trackpad/desktop/refresh"
+        components.queryItems = nil
+
+        guard let url = components.url else {
+            throw RemoteControlError.invalidRelayEndpoint
+        }
+        return url
+    }
+
     public static func normalizedEndpoint(_ rawEndpoint: String) throws -> String {
         let trimmedEndpoint = rawEndpoint.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedEndpoint.isEmpty else {
